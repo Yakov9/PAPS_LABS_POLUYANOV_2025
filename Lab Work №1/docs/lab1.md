@@ -30,7 +30,7 @@
 
 ## Диаграмма вариантов использования (Use Case Diagram)
 
-![Diagram](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/LabWork1/docs/diagram.jpg)
+![Diagram](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork1/Lab%20Work%20№1/docs/diagram.jpg)
 
 ## Перечень сделанных предположений
 
