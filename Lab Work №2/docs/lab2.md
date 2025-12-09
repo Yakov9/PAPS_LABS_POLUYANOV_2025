@@ -4,7 +4,7 @@
 
 ## Диаграмма системного контекста (System Context)
 
-![System Context](docs/system-context.jpg)
+![System Context](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/system-context.jpg)
 
 ### Описание
 На диаграмме показана разрабатываемая система как единый чёрный ящик.  
@@ -16,7 +16,7 @@
 
 ## Диаграмма контейнеров (Container Diagram)
 
-![Containers](docs/containers.jpg)
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/containers.jpg)
 
 ### Описание элементов и выбор архитектурного стиля
 Система реализована в виде **двух независимых микросервисов** (архитектурный стиль — микросервисная архитектура с асинхронным обменом через брокер сообщений):
@@ -38,8 +38,8 @@
 
 ## Диаграмма компонентов — Verification Service (повышенная сложность)
 
-![Components — Verification](docs/components-verification.jpg)
+![Components — Verification](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/components-verification.jpg)
 
 ## Диаграмма компонентов — Proxy Service
 
-![Components — Proxy](docs/components-proxy.jpg)
+![Components — Proxy](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/components-proxy.jpg)
