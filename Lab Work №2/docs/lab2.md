@@ -2,7 +2,7 @@
 Тема: Использование нотации C4 model для проектирования архитектуры программной системы  
 Цель работы: Получить опыт использования графической нотации для фиксации архитектурных решений.
 
-## Диаграмма системного контекста (System Context)
+## Диаграмма системного контекста
 
 ![System Context](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/system-context.jpg)
 
@@ -14,7 +14,7 @@
 - Служба ИБ и комплаенс, а также администраторы получают доступ к результатам и логам для аудита и мониторинга.
 Основной протокол обмена — асинхронный через брокер сообщений Kafka, что обеспечивает отказоустойчивость и масштабируемость.
 
-## Диаграмма контейнеров (Container Diagram)
+## Диаграмма контейнеров
 
 ![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/containers.jpg)
 
@@ -36,7 +36,7 @@
 - Гибкость деплоя и лицензирования КриптоПро (нужно меньше лицензий).
 - Возможность независимого обновления и тестирования.
 
-## Диаграмма компонентов — Verification Service (повышенная сложность)
+## Диаграмма компонентов — Verification Service
 
 ![Components — Verification](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/components-verification.jpg)
 
