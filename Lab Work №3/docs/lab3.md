@@ -31,7 +31,7 @@
 
 ## Диаграмма последовательностей
 
-![Components — Proxy](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/components-proxy.jpg)
+![Sequence Diagram](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork3/Lab%20Work%20%E2%84%963/docs/sequence.jpg)
 
 Диаграмма последовательностей отражает сценарий проверки электронной подписи документа.
 Пользователь загружает документы через приложение, после чего запрос передается на сервер.
@@ -40,7 +40,7 @@
 
 Модель данных представлена в виде UML-диаграммы классов. Для хранения логов результата проверки подписей используется одна сущность.
 
-![Components — Proxy](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork2/Lab%20Work%20%E2%84%962/docs/components-proxy.jpg)
+![DB Model Diagram](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork3/Lab%20Work%20%E2%84%963/docs/db_model.jpg)
 
 ## Применение основных принципов разработки
 
