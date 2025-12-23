@@ -54,6 +54,7 @@ KISS, YAGNI, DRY и SOLID.
 Принцип KISS реализован за счёт простых и легко читаемых методов,
 каждый из которых выполняет одну конкретную задачу без избыточной логики.
 
+```csharp
 public VerificationResult VerifySignature(byte[] document, byte[] signature)
 {
     if (!_cryptoService.Verify(document, signature))
@@ -63,6 +64,7 @@ public VerificationResult VerifySignature(byte[] document, byte[] signature)
 
     return VerificationResult.Valid();
 }
+```
 
 Метод содержит минимальное количество условий и возвращает результат
 проверки без дополнительной обработки, что упрощает понимание и сопровождение кода.
@@ -72,6 +74,7 @@ public VerificationResult VerifySignature(byte[] document, byte[] signature)
 Принцип YAGNI соблюдён за счёт реализации только той функциональности,
 которая необходима для текущего варианта использования.
 
+```csharp
 public class SignatureVerificationService
 {
     public VerificationResult Verify(byte[] document, byte[] signature)
@@ -81,6 +84,7 @@ public class SignatureVerificationService
             : VerificationResult.Invalid("Ошибка проверки подписи");
     }
 }
+```
 
 В системе отсутствует преждевременная реализация дополнительных функций,
 таких как поддержка нескольких алгоритмов подписи, расширенные отчёты
@@ -91,11 +95,13 @@ public class SignatureVerificationService
 Принцип DRY реализован путём вынесения повторяющейся логики
 криптографической проверки в отдельный сервис.
 
+```csharp
 public interface ICryptoService
 {
     bool Verify(byte[] data, byte[] signature);
 }
-
+```
+```csharp
 public class CryptoService : ICryptoService
 {
     public bool Verify(byte[] data, byte[] signature)
@@ -104,6 +110,7 @@ public class CryptoService : ICryptoService
         return true;
     }
 }
+```
 
 Данный сервис используется всеми компонентами системы,
 что исключает дублирование логики и упрощает поддержку кода.
@@ -116,6 +123,7 @@ public class CryptoService : ICryptoService
 
 Каждый класс системы отвечает только за одну зону ответственности.
 
+```csharp
 public class SignatureVerificationService
 {
     public VerificationResult VerifySignature(byte[] document, byte[] signature)
@@ -123,7 +131,8 @@ public class SignatureVerificationService
         // Проверка подписи
     }
 }
-
+```
+```csharp
 public class CertificateRepository
 {
     public Certificate GetById(Guid id)
@@ -131,17 +140,21 @@ public class CertificateRepository
         // Работа с хранилищем сертификатов
     }
 }
+```
 
 #### Open/Closed Principle (OCP)
 
 Система открыта для расширения и закрыта для модификации
 за счёт использования абстракций.
 
+```csharp
 public interface ISignatureAlgorithm
 {
     bool Verify(byte[] data, byte[] signature);
-}
 
+}
+```
+```csharp
 public class RsaSignatureAlgorithm : ISignatureAlgorithm
 {
     public bool Verify(byte[] data, byte[] signature)
@@ -149,12 +162,14 @@ public class RsaSignatureAlgorithm : ISignatureAlgorithm
         return true;
     }
 }
+```
 
 #### Liskov Substitution Principle (LSP)
 
 Любая реализация интерфейса ISignatureAlgorithm
 может использоваться без изменения логики системы.
 
+```csharp
 public class VerificationService
 {
     private readonly ISignatureAlgorithm _algorithm;
@@ -164,27 +179,32 @@ public class VerificationService
         _algorithm = algorithm;
     }
 }
+```
 
 #### Interface Segregation Principle (ISP)
 
 Интерфейсы разделены по назначению,
 что предотвращает реализацию лишних методов.
 
+```csharp
 public interface ICertificateReader
 {
     Certificate GetById(Guid id);
 }
-
+```
+```csharp
 public interface ICertificateValidator
 {
     bool IsValid(Certificate certificate);
 }
+```
 
 #### Dependency Inversion Principle (DIP)
 
 Высокоуровневые модули не зависят от конкретных реализаций,
 а работают с абстракциями.
 
+```csharp
 public class VerificationService
 {
     private readonly ICryptoService _cryptoService;
@@ -194,6 +214,7 @@ public class VerificationService
         _cryptoService = cryptoService;
     }
 }
+```
 
 ## Дополнительные принципы разработки
 
