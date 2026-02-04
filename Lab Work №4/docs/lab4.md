@@ -251,8 +251,6 @@ certFile — IFormFile (.cer файл)
 
 ### 6. DELETE /api/v1/verificationLogs/clean
 
-Позитивный: olderThan + operationType -> 204 No Content
-Негативный: дата в будущем → 400 Bad Request
 Позитивный: olderThan -> 200 и информация о кол-ве удаленных записей
 ![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/4del_older.jpg)
 Позитивный: operationType -> 200 и информация о кол-ве удаленных записей
