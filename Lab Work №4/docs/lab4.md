@@ -2,7 +2,7 @@
 Тема: Проектирование REST API  
 Цель работы: Получить опыт проектирования программного интерфейса.
 
-## Принятые проектные решения (9 решений)
+## Принятые проектные решения (8 решений)
 
 При проектировании REST API были приняты следующие решения:
 
@@ -35,44 +35,7 @@
 
 ## Документация по API
 
-### 1. POST /api/v1/documentVerififcation/detached
-**Описание**: Запускает проверку архива, расположенного в S3.  
-**Метод**: POST  
-**Входные данные** (application/json):  
-```json
-{
-  "messageId": "string (обязательно)",
-  "s3BucketFilePath": "string (обязательно, пример: s01_my-bucket_path_archive.zip)"
-}
-```
-200 OK — проверка завершена
-```json
-{
-  "messageId": "string",
-  "fileId": "string | null (новый путь в S3 при успехе)",
-  "errorMessage": "string | null"
-}
-```
-400 Bad Request — некорректные данные
-500 Internal Server Error — внутренняя ошибка
-
-###2. POST /api/v1/documentVerififcation/detached/twoFiles
-**Описание**: Проверка подписи и ориг. документа, загруженных напрямую в теле запроса.
-**Метод**: POST
-**Content-Type**: multipart/form-data
-**Параметры**:
-
-signature и data — IFormFile
-Коды ответа:
-200 OK
-```json
-{
-  "status": "PASS" | "FAIL",
-}
-```
-400 Bad Request — файл не передан или неверный формат
-
-###3. POST /api/v1/signVerification
+###1. POST /api/v1/signVerification
 **Описание**: Проверка откреплённой подписи + оригинального документа + сертификата.
 **Метод**: POST
 **Content-Type**: application/json
@@ -94,6 +57,43 @@ signature и data — IFormFile
 }
 ```
 400 Bad Request — не base64 или не указаны параметры
+
+###2. POST /api/v1/documentVerififcation/detached/twoFiles
+**Описание**: Проверка подписи и ориг. документа, загруженных напрямую в теле запроса.
+**Метод**: POST
+**Content-Type**: multipart/form-data
+**Параметры**:
+
+signature и data — IFormFile
+Коды ответа:
+200 OK
+```json
+{
+  "status": "PASS" | "FAIL",
+}
+```
+400 Bad Request — файл не передан или неверный формат
+
+### 3. POST /api/v1/documentVerififcation/detached
+**Описание**: Запускает проверку архива, расположенного в S3.  
+**Метод**: POST  
+**Входные данные** (application/json):  
+```json
+{
+  "messageId": "string (обязательно)",
+  "s3BucketFilePath": "string (обязательно, пример: s01_my-bucket_path_archive.zip)"
+}
+```
+200 OK — проверка завершена
+```json
+{
+  "messageId": "string",
+  "fileId": "string | null (новый путь в S3 при успехе)",
+  "errorMessage": "string | null"
+}
+```
+400 Bad Request — некорректные данные
+500 Internal Server Error — внутренняя ошибка
 
 ###4. GET /api/v1/verificationLogs/byMessageId/{messageId}
 **Описание**: Получение всех логов проверок по messageId.
@@ -196,3 +196,91 @@ certFile — IFormFile (.cer файл)
 }
 ```
 404 Not Found — запись не найдена
+
+##Тестирование API
+Для каждого эндпоинта проведено минимум 2 теста в Postman (позитивный сценарий + негативный).
+Особое внимание уделено проверке base64-данных: при передаче некорректной строки возвращается 400 Bad Request с описанием ошибки.
+### 1. POST /api/v1/verification/signature
+
+Позитивный: валидные подпись с оригинальным документом -> 200 true
+тело:
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/1signVerify_pos.jpg)
+хедеры:
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/1signVerify_pos_headers.jpg)
+
+Негативный 1: невалидная base64-строка в подписи -> 400 Bad Request
+тело:
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/1signVerify400.jpg)
+хедеры:
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/1signVerify400_headers.jpg)
+
+Негативный 2: невалидная подпись -> 200 false
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/1signVerify_neg.jpg)
+
+Далее не буду предоставлять скрины хедеров (они почти везде одни и те же)
+
+### 2. POST /api/v1/documentVerififcation/detached/twoFiles
+
+Позитивный: файл валиден -> 200 PASS
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/8two_pos.jpg)
+Негативный: файл (подпись) не валиден -> 200 FAIL
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/8two_neg.jpg)
+
+### 3. POST /api/v1/documentVerification/detached
+
+Позитивный: путь s3 на валидный архив -> 200 OK, fileId заполнен
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/9s3_pos.jpg)
+Негативный: путь s3 на невалидный архив -> 200 OK, fileId не заполнен, указан errorMessage
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/9s3_neg.jpg)
+
+### 4. GET  /api/v1/verificationLogs/byMessageId/{messageId}
+
+Позитивный: существующий messageId -> 200 + записи по этому messageId
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/3byMessageId_pos.jpg)
+Негативный: не существующий messageId -> 200 с пустым телом
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/3byMessageId_none.jpg)
+
+### 5. GET /api/v1/verificationLogs/byId/{Id}
+
+Позитивный: верный формат Id (существующий) - 200 + запись по этому Id
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/2byId_pos.jpg)
+Негативный: неверный формат Guid -> 400
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/2byId_400.jpg)
+Негативный: верный формат Id (но не существующий) - 200 + пустое тело
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/2byIdNone.jpg)
+
+### 6. DELETE /api/v1/verificationLogs/clean
+
+Позитивный: olderThan + operationType -> 204 No Content
+Негативный: дата в будущем → 400 Bad Request
+Позитивный: olderThan -> 200 и информация о кол-ве удаленных записей
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/4del_older.jpg)
+Позитивный: operationType -> 200 и информация о кол-ве удаленных записей
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/4del_type.jpg)
+Позитивный: olderThan + operationType -> 200 и информация о кол-ве удаленных записей
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/4del_comb.jpg)
+Негатиыный: olderThan -> 200 и ни одной записи не удалилось
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/4del_none.jpg)
+
+### 7. POST /api/v1/certificateVerification
+
+Позитивный: валидный сертификат в виде строки base64 -> 200 true
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/5cert_pos.jpg)
+Негативный: некорректный base64 -> 400 Bad Request
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/5cert_400.jpg)
+Негативный: невалидный сертификат в виде строки base64 -> 200 false
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/5cert_neg.jpg)
+
+### 8. POST /api/v1/certificateVerification/file
+
+Позитивный: валидный сертификат в виде файла -> 200 true
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/6certfile_neg.jpg)
+Негативный: невалидный сертификат в виде файла -> 200 false
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/6certfile_pos.jpg)
+
+### 9. PUT /api/v1/verification/logs/{logId}
+
+Позитивный: указание существующего Id и верный формат параметров лога для изменения -> 200 Данные обновлены
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/7put_pos.jpg)
+Негативный: указание несуществующего Id -> 200 запись не найдены
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/7put_NF.jpg)
