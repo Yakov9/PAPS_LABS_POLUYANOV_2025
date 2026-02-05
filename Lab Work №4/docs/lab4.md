@@ -35,7 +35,7 @@
 
 ## Документация по API
 
-###1. POST /api/v1/signVerification
+### 1. POST /api/v1/signVerification
 **Описание**: Проверка откреплённой подписи + оригинального документа + сертификата.
 **Метод**: POST
 **Content-Type**: application/json
@@ -58,7 +58,7 @@
 ```
 400 Bad Request — не base64 или не указаны параметры
 
-###2. POST /api/v1/documentVerififcation/detached/twoFiles
+### 2. POST /api/v1/documentVerififcation/detached/twoFiles
 **Описание**: Проверка подписи и ориг. документа, загруженных напрямую в теле запроса.
 **Метод**: POST
 **Content-Type**: multipart/form-data
@@ -95,7 +95,7 @@ signature и data — IFormFile
 400 Bad Request — некорректные данные
 500 Internal Server Error — внутренняя ошибка
 
-###4. GET /api/v1/verificationLogs/byMessageId/{messageId}
+### 4. GET /api/v1/verificationLogs/byMessageId/{messageId}
 **Описание**: Получение всех логов проверок по messageId.
 **Метод**: GET
 **Параметры пути**: messageId (string)
@@ -112,7 +112,7 @@ signature и data — IFormFile
 }
 ```
 
-###5. GET /api/v1/verificationLogs/byId/{Id}
+### 5. GET /api/v1/verificationLogs/byId/{Id}
 **Описание**: Получение логов по Id.
 **Метод**: GET
 **Параметры запроса (query)**:
@@ -121,7 +121,7 @@ Id — Guid
 Коды ответа:
 200 OK — массив объектов логов (в виде списка в JSON)
 
-###6. DELETE /api/v1/verificationLogs/clean
+### 6. DELETE /api/v1/verificationLogs/clean
 **Описание**: Удаление логов по фильтрам (дата и/или тип операции).
 **Метод**: DELETE
 **Параметры запроса (query)**:
@@ -132,7 +132,7 @@ operationType — "DOC" | "CER" | "SIGN" (опционально)
 200 - с текстом Удалено n записей
 400 Bad Request — некорректные фильтры
 
-###7. POST /api/v1/certificateVerification
+### 7. POST /api/v1/certificateVerification
 **Описание**: Проверка валидности сертификата в формате base64.
 **Метод**: POST
 **Content-Type**: application/json
@@ -150,7 +150,7 @@ operationType — "DOC" | "CER" | "SIGN" (опционально)
 ```
 400 - некорректный формат входных файлов или null
 
-###8. POST /api/v1/certificateVerification/file
+### 8. POST /api/v1/certificateVerification/file
 **Описание**: Проверка сертификата, загруженного файлом.
 **Метод**: POST
 **Content-Type**: multipart/form-data
@@ -166,7 +166,7 @@ certFile — IFormFile (.cer файл)
 ```
 400 Bad Request — файл не передан или неверного формата
 
-###9. PUT /api/v1/verification/logs/{logId}
+### 9. PUT /api/v1/verification/logs/{logId}
 **Описание**: Обновление/замена записи лога проверки по Id.
 **Метод**: PUT
 **Параметры пути**: Id (Guid)
