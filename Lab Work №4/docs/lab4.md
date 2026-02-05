@@ -98,7 +98,8 @@ signature и data — IFormFile
 ### 4. GET /api/v1/verificationLogs/byMessageId/{messageId}
 **Описание**: Получение всех логов проверок по messageId.
 **Метод**: GET
-**Параметры пути**: messageId (string)
+**Параметры пути** / **Входные**: messageId (string)
+
 **Коды ответа**:
 
 200 OK — массив объектов логов
@@ -115,7 +116,7 @@ signature и data — IFormFile
 ### 5. GET /api/v1/verificationLogs/byId/{Id}
 **Описание**: Получение логов по Id.
 **Метод**: GET
-**Параметры запроса (query)**:
+**Параметры запроса (query)** / **Входные**::
 
 Id — Guid
 Коды ответа:
@@ -124,7 +125,7 @@ Id — Guid
 ### 6. DELETE /api/v1/verificationLogs/clean
 **Описание**: Удаление логов по фильтрам (дата и/или тип операции).
 **Метод**: DELETE
-**Параметры запроса (query)**:
+**Параметры запроса (query)** / **Входные**::
 
 olderThan — DateTime (опционально) — удалить все логи до этой даты
 operationType — "DOC" | "CER" | "SIGN" (опционально)
