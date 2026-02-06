@@ -42,9 +42,9 @@
 **Тело запроса**:
 ```json
 {
-  "signatureBase64": "string (обязательно)",
-  "documentBase64": "string (обязательно)",
-  "certificateBase64": "string (обязательно)"
+  "signatureBase64": "string (обязательно)" - открепленная подпись в base64,
+  "documentBase64": "string (обязательно)" - оригинал документа в base64,
+  "certificateBase64": "string (обязательно) - сертификат, испольхованный для подписания в base64"
 }
 ```
 Коды ответа:
@@ -52,8 +52,8 @@
 200 OK
 ```json
 {
-  "isValid": true | false,
-  "message": "string"
+  "isValid": true | false - валидна или нет,
+  "message": "string" - сообщение ошибки
 }
 ```
 400 Bad Request — не base64 или не указаны параметры
@@ -64,12 +64,13 @@
 **Content-Type**: multipart/form-data
 **Параметры**:
 
-signature и data — IFormFile
+signature - подписанный файл
+data - файл оригинального документа
 Коды ответа:
 200 OK
 ```json
 {
-  "status": "PASS" | "FAIL",
+  "status": "PASS" | "FAIL" - валиден или нет,
 }
 ```
 400 Bad Request — файл не передан или неверный формат
@@ -80,23 +81,23 @@ signature и data — IFormFile
 **Входные данные** (application/json):  
 ```json
 {
-  "messageId": "string (обязательно)",
-  "s3BucketFilePath": "string (обязательно, пример: s01_my-bucket_path_archive.zip)"
+  "messageId": "string (обязательно)" - идентификатор сообщения запроса на проверку,
+  "s3BucketFilePath": "string (обязательно, пример: s01_my-bucket_path_archive.zip) - путь до файла в хранилище s3"
 }
 ```
 200 OK — проверка завершена
 ```json
 {
-  "messageId": "string",
-  "fileId": "string | null (новый путь в S3 при успехе)",
-  "errorMessage": "string | null"
+  "messageId": "string" - идентификатор сообщения запроса на проверку,
+  "fileId": "string | null - (новый путь в S3 при успехе)",
+  "errorMessage": "string | null" - ошибка при валидации (если все упешно, то null)
 }
 ```
 400 Bad Request — некорректные данные
 500 Internal Server Error — внутренняя ошибка
 
 ### 4. GET /api/v1/verificationLogs/byMessageId/{messageId}
-**Описание**: Получение всех логов проверок по messageId.
+**Описание**: Получение всех логов проверок по messageId (идентификатор запроса на проверку документов).
 **Метод**: GET
 **Параметры пути** / **Входные**: messageId (string)
 
@@ -114,7 +115,7 @@ signature и data — IFormFile
 ```
 
 ### 5. GET /api/v1/verificationLogs/byId/{Id}
-**Описание**: Получение логов по Id.
+**Описание**: Получение логов по Id (идентификатор записей логов в БД).
 **Метод**: GET
 **Параметры запроса (query)** / **Входные**::
 
@@ -128,7 +129,7 @@ Id — Guid
 **Параметры запроса (query)** / **Входные**::
 
 olderThan — DateTime (опционально) — удалить все логи до этой даты
-operationType — "DOC" | "CER" | "SIGN" (опционально)
+operationType — "DOC" | "CER" | "SIGN" (опционально) - удалить записи логов с проверками этого типа
 Коды ответа:
 200 - с текстом Удалено n записей
 400 Bad Request — некорректные фильтры
@@ -146,7 +147,7 @@ operationType — "DOC" | "CER" | "SIGN" (опционально)
 200 OK
 ```json
 {
-  "isValid": true | false
+  "isValid": true | false - валиден или нет
 }
 ```
 400 - некорректный формат входных файлов или null
@@ -157,7 +158,7 @@ operationType — "DOC" | "CER" | "SIGN" (опционально)
 **Content-Type**: multipart/form-data
 **Параметры**:
 
-certFile — IFormFile (.cer файл)
+certFile — IFormFile (.cer файл) - файл сертификата на проверку
 Коды ответа:
 200 OK
 ```json
@@ -167,8 +168,8 @@ certFile — IFormFile (.cer файл)
 ```
 400 Bad Request — файл не передан или неверного формата
 
-### 9. PUT /api/v1/verification/logs/{logId}
-**Описание**: Обновление/замена записи лога проверки по Id.
+### 9. PUT /api/v1/verification/logs
+**Описание**: Обновление/замена записи лога проверки по Id. Остальные поля указывать на новые значения, если их надо поменять
 **Метод**: PUT
 **Параметры пути**: Id (Guid)
 **Content-Type**: application/json
@@ -200,7 +201,11 @@ certFile — IFormFile (.cer файл)
 
 ##Тестирование API
 Для каждого эндпоинта проведено минимум 2 теста в Postman (позитивный сценарий + негативный).
-Особое внимание уделено проверке base64-данных: при передаче некорректной строки возвращается 400 Bad Request с описанием ошибки.
+
+Результаты написанных автотестов:
+![Containers](https://github.com/Yakov9/PAPS_LABS_POLUYANOV_2025/blob/LabWork4/Lab%20Work%20%E2%84%964/docs/tests.png)
+Далее будут расписаны конкретные написанные запросы (к которым написаны тесты)
+
 ### 1. POST /api/v1/verification/signature
 
 Позитивный: валидные подпись с оригинальным документом -> 200 true
